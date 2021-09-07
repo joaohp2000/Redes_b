@@ -16,8 +16,6 @@ typedef struct arq_fragmentos arq_fragmentos;
 
 extern int qttd_bloco;
 
-
-
 struct MensagemTexto
 {
     unsigned short int IdEnvio;  //Porta de origem
@@ -28,26 +26,26 @@ struct MensagemTexto
 };
 typedef struct MensagemTexto MensagemTexto;
 
-MensagemTexto *cria_pacote(int num_pacotes);
+MensagemTexto *cria_pacote(int num_pacotes); // Função tipo Mensagem texto, retorna um endereço com num_pacotes alocados
 
-uint16_t check(uint16_t * pacote, int size);
+uint16_t check(uint16_t * pacote, int size); // Função de Checksum
 
-long int findSize(char file_name[]);
+long int findSize(char file_name[]); // Retorna tamanho do arquivo
 
-void destroi_pacote(MensagemTexto *pacote);
+void destroi_pacote(MensagemTexto *pacote); //Libera da memoria pacotes alocados
 
-void preenche_pacote(MensagemTexto *pacote, int tam, char *mensagem, unsigned int IdEnvio, unsigned int IdRecebe);
+void preenche_pacote(MensagemTexto *pacote, int tam, char *mensagem, unsigned int IdEnvio, unsigned int IdRecebe); // Preenche pacotes
 
-void consulta_pacote(MensagemTexto pacote);
+void consulta_pacote(MensagemTexto pacote); //imprime os campos do pacote
 
-void envia_pacote(MensagemTexto *pacote, int protocolo);
+void envia_pacote(MensagemTexto *pacote, int protocolo); //Envia pacotes, recebe ponterio para pacotes e variavel do tipo de protocolo (TCP =1) (UDp =0)
 
-MensagemTexto * recebe(int protocolo);
+MensagemTexto * recebe(int protocolo); //Retorna endereço para pacotes recebidos. Parametro: tipo de protocolo
 
-arq_fragmentos * fragmenta_arq(char *nome_arquivo, int bits);
+arq_fragmentos * fragmenta_arq(char *nome_arquivo, int bits); // Fragementa arquivos em N bits, de acordo com parametro
 
-void close_socket(int sock);
+void close_socket(int sock); // Fecha socket (Não em uso)
 
-int reconstroi_pacote(MensagemTexto *pacote);
-void valida_pacotes(MensagemTexto *pacotes);
+int reconstroi_pacote(MensagemTexto *pacote); //Reconstroi pacotes no hd e retorna tamanho do arquivo
+void valida_pacotes(MensagemTexto *pacotes); // Valida pelo campo checksum se todos os pacotes estao válidos
 #endif

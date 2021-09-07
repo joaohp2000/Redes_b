@@ -14,7 +14,7 @@ int main(){
     int size_arquivo;
     char c;
     MensagemTexto *pacotes;
-    pacotes = recebe(TCP); // Abre conexão e recebe pacotes
+    pacotes = recebe(UDP); // Abre conexão e recebe pacotes
     valida_pacotes(pacotes); // Valida pelo campo do checksum se os pacotes estão corretos
     size_arquivo=reconstroi_pacote(pacotes); //Reconstroi arquivo no hd
 
@@ -24,6 +24,7 @@ int main(){
         printf("Erro! Impossivel abrir o arquivo!\n");
         exit(1);
     }
+    
     printf("Conteudo do Arquivo:");
     for(int i=0;i<size_arquivo;i++){
         fread(&c,1,1,arq);
