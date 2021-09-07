@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include <string.h>
 
-extern int qttd_bloco;
 
-static long int findSize(char file_name[])
+
+long int findSize(char file_name[])
 {
     // opening the file in read mode
     FILE *fp = fopen(file_name, "r");
@@ -53,28 +53,57 @@ arq_fragmentos * fragmenta_arq(char *nome_arquivo, int bits)
     
 
     if(size%tam_bloco == 0){
-        blocos = malloc(sizeof(arq_fragmentos *) * qttd_bloco); //eh alocado o tamanho do blocos
+        blocos = malloc(sizeof(arq_fragmentos) * qttd_bloco); //eh alocado o tamanho do blocos
         //numero de blocos exato com tamanho do arquivo
         
         for(int i=0; i<qttd_bloco; i++){
             blocos[i].fragmentos = malloc(sizeof(tam_bloco));
             //ler o arquivo com o tamanho em byte com fread
             fread(blocos[i].fragmentos, 1, (size_t)tam_bloco , arquivo);
+            blocos[i].size=tam_bloco;
+            
             //printf("%s\n",blocos[i].fragmentos);
         }
     }
     else{
-        blocos = malloc(sizeof(arq_fragmentos *) * (qttd_bloco+1)); //eh alocado o tamanho do blocos
+//Fazer verificação do ultimo bloco para nao pegar lixo
+    int tam_ultimo = size%tam_bloco;
+        blocos = malloc(sizeof(arq_fragmentos) * (qttd_bloco+1)); //eh alocado o tamanho do blocos
         //O ultimo bloco nao sera preenchido completamente
         qttd_bloco++;
-        for(int i=0; i<qttd_bloco+1; i++){
+        for(int i=0; i<qttd_bloco-1; i++){
             blocos[i].fragmentos = malloc(sizeof(tam_bloco));
             //ler o arquivo com o tamanho em byte com fread
             fread(blocos[i].fragmentos, (size_t)tam_bloco , 1, arquivo);
             //printf("%s\n",blocos[i].fragmentos);
+            blocos[i].size=tam_bloco;
         }
-        
+        blocos[qttd_bloco-1].fragmentos = malloc(sizeof(tam_ultimo));
+        fread(blocos[qttd_bloco-1].fragmentos, (size_t)tam_ultimo , 1, arquivo);
+        blocos[qttd_bloco-1].size=tam_ultimo;
     }
+    
     return blocos;
     
+}
+int qttd_bloco;
+int reconstroi_pacote(MensagemTexto *pacote){
+     FILE *arquivo;
+    int tam=0;
+    // pegar o nome do arquivo e seu tamanho
+   
+    // Caso ocorra algum erro na abertura do arquivo
+    if ((arquivo = fopen("arquivo.txt", "w")) == NULL)
+    {
+        // o programa aborta automaticamente
+        printf("Erro! Impossivel abrir o arquivo!\n");
+        exit(1);
+    }
+    for(int i=0; i<qttd_bloco;i++){
+        fwrite(pacote[i].mensagem, pacote[i].tam, 1, arquivo);
+        tam+=pacote[i].tam;
+    }
+
+    fclose(arquivo);
+    return tam;
 }
