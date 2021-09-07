@@ -315,7 +315,7 @@ uint16_t check(uint16_t * pacote, int size){
     return cksum;
 }
 
-void valida_pacotes(MensagemTexto *pacotes){
+int valida_pacotes(MensagemTexto *pacotes){
     unsigned short csum;
     int valida=0;
     for(int i=0;i<qttd_bloco;i++){
@@ -324,9 +324,10 @@ void valida_pacotes(MensagemTexto *pacotes){
         }
         else {
             printf("Pacote Incorreto");
+            return 0;
         }
     }
   //  printf("okkk: %d", valida);
-    if(qttd_bloco == valida) printf("\nTodos os pacotes estão válidos\n\n");
+    if(qttd_bloco == valida) printf("\nTodos os pacotes estão válidos\n\n"); return valida;
     
 }

@@ -47,5 +47,5 @@ arq_fragmentos * fragmenta_arq(char *nome_arquivo, int bits); // Fragementa arqu
 void close_socket(int sock); // Fecha socket (Não em uso)
 
 int reconstroi_pacote(MensagemTexto *pacote); //Reconstroi pacotes no hd e retorna tamanho do arquivo
-void valida_pacotes(MensagemTexto *pacotes); // Valida pelo campo checksum se todos os pacotes estao válidos
+int valida_pacotes(MensagemTexto *pacotes); // Valida pelo campo checksum se todos os pacotes estao válidos
 #endif

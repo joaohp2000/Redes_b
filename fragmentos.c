@@ -66,7 +66,7 @@ arq_fragmentos * fragmenta_arq(char *nome_arquivo, int bits)
         }
     }
     else{
-//Fazer verificação do ultimo bloco para nao pegar lixo
+    //Fazer verificação do ultimo bloco para nao pegar lixo
     int tam_ultimo = size%tam_bloco;
         blocos = malloc(sizeof(arq_fragmentos) * (qttd_bloco+1)); //eh alocado o tamanho do blocos
         //O ultimo bloco nao sera preenchido completamente
