@@ -8,7 +8,7 @@
 
 > Programa feito na linguagem C para a transferência de arquivos usando o procotopo TCP e UDP. Fazendo todas as verificações dos pacotes que foram enviados e recebidos.
 
-### Ajustes e melhorias
+## 🔑 Ajustes e melhorias
 
 O projeto ainda está em desenvolvimento e as próximas atualizações serão voltadas nas seguintes tarefas:
 
@@ -59,7 +59,7 @@ gcc cliente.c fragmentos.c pacotes.c -o cliente
 ```
 ./serv
 ```
-4. Será requisitado um nome do arquivo a ser compartilhado, o informe.
+4. Será requisitado um nome do arquivo a ser enviado. (Verifique se o mesmo consta na pasta atual)
 5. Execute o cliente no Terminal 2 com o seguinte comando:
 ```
 ./cliente
@@ -120,11 +120,6 @@ Agradecemos às seguintes pessoas que contribuíram para este projeto:
     </td>
   </tr>
 </table>
-
-
-## 😄 Seja um dos contribuidores<br>
-
-Quer fazer parte desse projeto? Clique [AQUI](CONTRIBUTING.md) e leia como contribuir.
 
 
 
