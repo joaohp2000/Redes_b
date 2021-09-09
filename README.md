@@ -2,6 +2,7 @@
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/joaohp2000/Redes_b)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/joaohp2000/Redes_b)
+![Forks](https://img.shields.io/github/forks/joaohp2000/Redes_b?style=social)
 
 
 <img src="https://gyazo.com/46c315e6ec0f960b911dd8b5e6696e7f.png" alt="exemplo imagem">
