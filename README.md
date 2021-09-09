@@ -121,6 +121,3 @@ Agradecemos às seguintes pessoas que contribuíram para este projeto:
   </tr>
 </table>
 
-
-
-[⬆ Voltar ao topo](#Redes_b)<br>
