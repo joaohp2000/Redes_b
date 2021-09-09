@@ -60,7 +60,7 @@ gcc cliente.c fragmentos.c pacotes.c -o cliente
 ./serv
 ```
 4. Será requisitado um nome do arquivo a ser compartilhado, o informe.
-5. Compile o cliente no Terminal 2 com o seguinte comando:
+5. Execute o cliente no Terminal 2 com o seguinte comando:
 ```
 ./cliente
 ```
