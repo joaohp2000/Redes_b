@@ -12,8 +12,8 @@
 
 O projeto ainda está em desenvolvimento e as próximas atualizações serão voltadas nas seguintes tarefas:
 
-- [x] Função que cria um novo pacote
-- [x] Função que destrua um pacote
+- [x] Função que cria um novo pacote.
+- [x] Função que destrua um pacote.
 - [x] Função que recebe, por parâmetro: o caminho para um arquivo (que neste caso será um txt) e também a uma quantidade máxima de bits a qual esse arquivo será fracionado. Essa função retorna um array ou uma estrutura de dados com o arquivo totalmente fragmentado conforme solicitado.
 - [x] Criação de pacotes a serem transferidos, já com conteúdo completo. Usando os fragmentos gerados pela função anterior.
 - [x] Criar uma função de envio de pacotes que recebe um pacote e um parâmetro indicando qual protocolo de camada de transporte será usado.
@@ -44,7 +44,7 @@ cd Redes_b
 
 ## ☕ Compilando 
 
-É necessário abrir dois terminais para continuar com a instalação.
+É necessário abrir dois terminais para continuar com a execução.
 Para compilar, siga estas etapas:
 
 1. No Terminal 1 - compile o servidor juntamente com a biblioteca criada.
