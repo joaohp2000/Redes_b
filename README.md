@@ -32,16 +32,16 @@ Antes de começar, verifique se você atendeu aos seguintes requisitos:
 
 Para instalar o projeto, siga estas etapas:
 
-1. Baixe o código fonte do projeto com o seguinte comando 
+1. Baixe o código fonte do projeto com o seguinte comando:
 ```
 git clone https://github.com/joaohp2000/Redes_b.git
 ```
-2. Descompacte os arquivos usando algum descompressor a sua escolha
-3. Mude para a pasta baixada e descompactada
+2. Descompacte os arquivos usando algum descompressor a sua escolha.
+3. Mude para a pasta baixada e descompactada:
 ```
 cd Redes_b
 ```
-4. Abra um outro terminal nessa mesma pasta para facilitar a compilação
+4. Abra um outro terminal nessa mesma pasta para facilitar a compilação.
 
 ## ☕ Compilando 
 
@@ -60,7 +60,7 @@ gcc cliente.c fragmentos.c pacotes.c -o cliente
 ```
 ./serv
 ```
-4. Será requisitado um nome do arquivo a ser enviado. (Verifique se o mesmo consta na pasta atual)
+4. Será requisitado um nome do arquivo a ser enviado. (Verifique se o mesmo consta na pasta atual).
 5. Execute o cliente no Terminal 2 com o seguinte comando:
 ```
 ./cliente
