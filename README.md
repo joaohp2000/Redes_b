@@ -11,7 +11,7 @@
 
 ## 🔑 Ajustes e melhorias
 
-O projeto ainda está em desenvolvimento e as próximas atualizações serão voltadas nas seguintes tarefas:
+O projeto ainda está em desenvolvimento e as próximas atualizações serão voltadas nas seguintes tarefas :
 
 - [x] Função que cria um novo pacote.
 - [x] Função que destrua um pacote.
