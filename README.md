@@ -11,7 +11,7 @@
 
 ## 🔑 Ajustes e melhorias
 
-O projeto ainda está em desenvolvimento e as próximas atualizações serão voltadas nas seguintes tarefas :
+O projeto ainda está em desenvolvimento e as próximas atualizações serão voltadas nas seguintes tarefas:
 
 - [x] Função que cria um novo pacote.
 - [x] Função que destrua um pacote.
@@ -28,7 +28,7 @@ Antes de começar, verifique se você atendeu aos seguintes requisitos:
 * Você tem uma máquina Linux ou Windows (usando o WSL). 
 * Você leu [File Transfer using TCP Socket in C](https://idiotdeveloper.com/file-transfer-using-tcp-socket-in-c/).
 
-## 🚀 Instalando 
+## 🚀 Instalando: 
 
 Para instalar o projeto, siga estas etapas:
 
