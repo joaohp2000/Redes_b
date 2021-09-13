@@ -3,6 +3,7 @@
 //porta origem, porta de destino, tamanho, checksum - 16b ; dados - 32b
 
 #include <stdint.h>
+#include <sys/types.h>
 #define UDP 0
 #define TCP 1
 
@@ -26,7 +27,36 @@ struct MensagemTexto
 };
 typedef struct MensagemTexto MensagemTexto;
 
+struct Cabecalho
+{
+    uint8_t versao;         //Versão - 4
+    uint8_t comp_cabec;     //Comprimento do cabeçalho - 4   
+    uint8_t tipo_serv;      //Tipo de serviço - 8
+    uint16_t comp_datagrama; //comprimento do datagrama - 16
+    uint16_t identificador;  //Identificador de 16 bit - 16
+    uint8_t flags;          //Flags - 3
+    uint16_t desloc_frag;    //Deslocamento de fragmentação - 13
+    uint8_t tempo_vida; //Tempo de vida - 8
+    uint8_t protoc_super;   //Protocolo da camada superior - 8
+    uint16_t som_verif_cabe; //Soma de verificação do cabeçalho -16
+    uint32_t end_ip_org; //Endereço IP da origem - 32
+    uint32_t end_ip_dest;//Endereço IP do destino - 32
+    uint32_t opcoes;         //Opçoes (se houver) - 32
+};
+typedef struct Cabecalho Cabecalho;
+
+struct ip
+{
+    Cabecalho Cabecalho_ip;
+    MensagemTexto dados;
+};
+typedef struct ip ip;
+
 MensagemTexto *cria_pacote(int num_pacotes); // Função tipo Mensagem texto, retorna um endereço com num_pacotes alocados
+
+ip * cria_data_ip();
+
+void preenche_ip(ip *data_ip, uint32_t ip_destino);
 
 uint16_t check(uint16_t * pacote, int size); // Função de Checksum
 
