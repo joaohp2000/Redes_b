@@ -19,6 +19,8 @@ O projeto ainda está em desenvolvimento e as próximas atualizações serão vo
 - [x] Criação de pacotes a serem transferidos, já com conteúdo completo. Usando os fragmentos gerados pela função anterior.
 - [x] Criar uma função de envio de pacotes que recebe um pacote e um parâmetro indicando qual protocolo de camada de transporte será usado.
 - [x] Criar um outro programa que servirá para receber os pacotes transmitidos.
+- [x] Criação de um novo pacote vazio.
+- [x] Adicionar os IP's de origem (seu IP) e o de destino.
 
 
 ## 💻 Pré-requisitos
