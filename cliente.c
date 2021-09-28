@@ -14,9 +14,9 @@ int main(){
     int size_arquivo;
     char c;
     MensagemTexto *pacotes;
-    pacotes = recebe(UDP); // Abre conexão e recebe pacotes
-    if(valida_pacotes(pacotes)){ // Valida pelo campo do checksum se os pacotes estão corretos
-        size_arquivo=reconstroi_pacote(pacotes); //Reconstroi arquivo no hd
+    pacotes = recebe_pacotes(UDP);          // Abre conexão e recebe pacotes
+    if(valida_segmentos(pacotes)){            // Valida pelo campo do checksum se os pacotes estão corretos
+        size_arquivo=reconstroi_segmento(pacotes);    //Reconstroi arquivo no hd
         if ((arq = fopen("arquivo.txt", "r")) == NULL)
         {
             // o programa aborta automaticamente
@@ -35,7 +35,7 @@ int main(){
         printf("Não é Possivél reconstruir o arquivo!");
     }
     
-    destroi_pacote(pacotes);     //libera os pacotes da memoria
+    destroi_segmento(pacotes);     //libera os pacotes da memoria
 
     
     return 0;

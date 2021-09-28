@@ -13,24 +13,24 @@
 
 int qttd_bloco;
 
-MensagemTexto *cria_pacote(int num_pacotes)
+MensagemTexto *cria_segmento(int num_segmentos)
 {
     //alocar
     MensagemTexto *envio;
-    envio = malloc(sizeof(MensagemTexto) * num_pacotes);
+    envio = malloc(sizeof(MensagemTexto) * num_segmentos);
     return envio;
 }
 
 
 MensagemTexto * recebe(int protocolo){
-    //pacotes armazenados vetor estrutura arq_fragmentos
+    //segmentos armazenados vetor estrutura arq_fragmentos
     int sock,tam;
     
     struct sockaddr_in name, server;
     struct hostent *hp, *gethostbyname();
-    struct MensagemTexto msg, *pacotes;
+    struct MensagemTexto msg, *segmentos;
     int len = sizeof(msg), length = sizeof(server);
-    if(!(pacotes = (MensagemTexto *) malloc(sizeof(MensagemTexto)))){
+    if(!(segmentos = (MensagemTexto *) malloc(sizeof(MensagemTexto)))){
          printf("Erro");
     } 
    
@@ -69,16 +69,16 @@ MensagemTexto * recebe(int protocolo){
             }
             else{
                 qttd_bloco++;
-                if(!(pacotes = (MensagemTexto *) realloc(pacotes, (qttd_bloco)*sizeof(MensagemTexto)))){
+                if(!(segmentos = (MensagemTexto *) realloc(segmentos, (qttd_bloco)*sizeof(MensagemTexto)))){
                     printf("Errouu");
                 }
-                preenche_pacote(&pacotes[qttd_bloco-1], msg.tam, msg.mensagem, msg.IdEnvio, msg.IdRecebe);
-                pacotes[qttd_bloco-1].checksum =msg.checksum;
-                consulta_pacote(pacotes[qttd_bloco-1]);
+                preenche_segmento(&segmentos[qttd_bloco-1], msg.tam, msg.mensagem, msg.IdEnvio, msg.IdRecebe);
+                segmentos[qttd_bloco-1].checksum =msg.checksum;
+                consulta_segmento(segmentos[qttd_bloco-1]);
             } 
         }while(1);
         close(sock);
-        return pacotes;
+        return segmentos;
     }
     else{
         if(protocolo == UDP){
@@ -88,7 +88,7 @@ MensagemTexto * recebe(int protocolo){
                 perror("socket creation failed");
                 exit(EXIT_FAILURE);
             }
-            //Criação do pacote UDP
+            //Criação do segmento UDP
             server.sin_family = AF_INET;
             server.sin_port= htons (1234);
             
@@ -114,16 +114,16 @@ MensagemTexto * recebe(int protocolo){
 
                 }
                 else{
-                    if(!(pacotes = (MensagemTexto *) realloc(pacotes, (i+1)*sizeof(MensagemTexto)))){
+                    if(!(segmentos = (MensagemTexto *) realloc(segmentos, (i+1)*sizeof(MensagemTexto)))){
                         printf("Errouu");
                     }
-                    preenche_pacote(&pacotes[i], msg.tam, msg.mensagem, msg.IdEnvio, msg.IdRecebe);
-                    pacotes[i].checksum =msg.checksum;
-                    consulta_pacote(pacotes[i]);
+                    preenche_segmento(&segmentos[i], msg.tam, msg.mensagem, msg.IdEnvio, msg.IdRecebe);
+                    segmentos[i].checksum =msg.checksum;
+                    consulta_segmento(segmentos[i]);
                 } 
              }
             close(sock);
-            return pacotes;
+            return segmentos;
         }
         else{
             printf("Protocolo não identificado");
@@ -132,48 +132,46 @@ MensagemTexto * recebe(int protocolo){
 
 }
 
-
-//testar a funcao csum e ver seu retorno, se for algo relativamente satisfatorio adicionar no preenchimento do pacote o valor de csum desse pacote
+//testar a funcao csum e ver seu retorno, se for algo relativamente satisfatorio adicionar no preenchimento do segmento o valor de csum desse segmento
 //printar para ver se nao houve mudança no valor, tentar enviar para o "cliente" e printar para verificar se nao teve mudança
 //entao aplicar no cliente a funcao csum apos isso comparar os csum's que foi enviado com o novo calculado.
 //aplicar csum apenas na mensagem que esta sendo enviada
 
-
-void destroi_pacote(MensagemTexto *pacote)
+void destroi_segmento(MensagemTexto *segmento)
 {
     //desalocar
-    free(pacote);
+    free(segmento);
 
     //char data;
     //data = recvfrom(sockfd, "?", "?", 0, "?", &length);
     //free(data);
 }
 
-void preenche_pacote(MensagemTexto *pacote, int tam, char *mensagem, unsigned int IdEnvio, unsigned int IdRecebe)
+void preenche_segmento(MensagemTexto *segmento, int tam, char *mensagem, unsigned int IdEnvio, unsigned int IdRecebe)
 {
-    //preencher os campos do pacote
-    pacote->tam = tam;
-    pacote->IdEnvio = IdEnvio;
-    pacote->IdRecebe = IdRecebe;
+    //preencher os campos do segmento
+    segmento->tam = tam;
+    segmento->IdEnvio = IdEnvio;
+    segmento->IdRecebe = IdRecebe;
    
-    memcpy(&(pacote->mensagem), mensagem, tam);
+    memcpy(&(segmento->mensagem), mensagem, tam);
 }
 
-void consulta_pacote(MensagemTexto pacote)
+void consulta_segmento(MensagemTexto segmento)
 {
-    //mostra os campos do pacote
+    //mostra os campos do segmento
     printf("\n************************************\n");
-    printf("Porta Origem: %d\n", pacote.IdEnvio);
-    printf("Porta Destino: %d\n", pacote.IdRecebe);
-    printf("Tamanho: %d\n", pacote.tam);
+    printf("Porta Origem: %d\n", segmento.IdEnvio);
+    printf("Porta Destino: %d\n", segmento.IdRecebe);
+    printf("Tamanho: %d\n", segmento.tam);
     printf("Mensagem:");
-    fwrite(pacote.mensagem, pacote.tam,1, stdout);
-    printf("\nChecksum : %04X \n", pacote.checksum);
+    fwrite(segmento.mensagem, segmento.tam,1, stdout);
+    printf("\nChecksum : %04X \n", segmento.checksum);
     printf("\n------------------------------------\n");
 }
 
-void envia_pacote(MensagemTexto * pacote, int protocolo){
-    //conectar com o cliente e enviar o pacote usando o protocolo selecionado
+void envia_segmento(MensagemTexto * segmento, int protocolo){
+    //conectar com o cliente e enviar o segmento usando o protocolo selecionado
     /* Cria o socket */
     int sock, msg_sock;
     struct sockaddr_in server;
@@ -216,14 +214,14 @@ void envia_pacote(MensagemTexto * pacote, int protocolo){
         printf("DDDD  Porta: %d\n\n", server.sin_port);
         msg_sock= accept(sock,(struct sockaddr *) &client, &length);      
         for(int i=0;i<qttd_bloco;i++){
-            pacote[i].IdRecebe=ntohs(client.sin_port);
-            bzero(&(pacote->checksum), sizeof(unsigned short int));
-            pacote[i].checksum=check(&pacote[i], 12);
-           // consulta_pacote(pacote[i]);
-            send(msg_sock, (char*)&pacote[i], len,0);
+            segmento[i].IdRecebe=ntohs(client.sin_port);
+            bzero(&(segmento->checksum), sizeof(unsigned short int));
+            segmento[i].checksum=check((uint16_t *)&segmento[i], 12);
+           // consulta_segmento(segmento[i]);
+            send(msg_sock, (char*)&segmento[i], len,0);
             
         }
-        sleep(2);
+
         close(sock);
         close(msg_sock);
 
@@ -268,15 +266,15 @@ void envia_pacote(MensagemTexto * pacote, int protocolo){
                     perror("Envio da mensagem");
         
             for(int i=0;i<qttd_bloco;i++){
-                pacote[i].IdRecebe=ntohs(client.sin_port);
-                bzero(&(pacote->checksum), sizeof(unsigned short int));
-                pacote[i].checksum=check(&pacote[i], 12);
+                segmento[i].IdRecebe=ntohs(client.sin_port);
+                bzero(&(segmento->checksum), sizeof(unsigned short int));
+                segmento[i].checksum=check((uint16_t *)&segmento[i], 12);
                
-                if (sendto (sock, (char *)&pacote[i], len, 0, (struct sockaddr *)&client, length) < 0) 
+                if (sendto (sock, (char *)&segmento[i], len, 0, (struct sockaddr *)&client, length) < 0) 
                     perror("Envio da mensagem");
                     
                    
-                    //consulta_pacote(pacote[i]);
+                    //consulta_segmento(segmento[i]);
             }
             close(sock);
 
@@ -303,8 +301,8 @@ void close_socket(int sock){
     
 }
 
-uint16_t check(uint16_t * pacote, int size){
-    uint16_t *pak = pacote;
+uint16_t check(uint16_t * segmento, int size){
+    uint16_t *pak = segmento;
     uint16_t cksum=0;
 
     for(int i=0;i<size/sizeof(uint16_t);i++){
@@ -315,19 +313,19 @@ uint16_t check(uint16_t * pacote, int size){
     return cksum;
 }
 
-int valida_pacotes(MensagemTexto *pacotes){
+int valida_segmentos(MensagemTexto *segmentos){
     unsigned short csum;
     int valida=0;
     for(int i=0;i<qttd_bloco;i++){
-        if((check((uint16_t *)&pacotes[i],12))==0 ) {
+        if((check((uint16_t *)&segmentos[i],12))==0 ) {
             valida++;
         }
         else {
-            printf("Pacote Incorreto");
+            printf("segmento Incorreto");
             return 0;
         }
     }
   //  printf("okkk: %d", valida);
-    if(qttd_bloco == valida) printf("\nTodos os pacotes estão válidos\n\n"); return valida;
+    if(qttd_bloco == valida) printf("\nTodos os segmentos estão válidos\n\n"); return valida;
     
 }

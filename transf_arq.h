@@ -6,6 +6,9 @@
 #include <sys/types.h>
 #define UDP 0
 #define TCP 1
+#define TCP_IP 6
+#define TCP_IP 6
+#define UDP_IP 7
 
 struct arq_fragmentos
 {
@@ -16,7 +19,7 @@ struct arq_fragmentos
 typedef struct arq_fragmentos arq_fragmentos;
 
 extern int qttd_bloco;
-
+// campo de dado recebe a struct do cabeçalho
 struct MensagemTexto
 {
     unsigned short int IdEnvio;  //Porta de origem
@@ -29,19 +32,19 @@ typedef struct MensagemTexto MensagemTexto;
 
 struct Cabecalho
 {
-    uint8_t versao;         //Versão - 4
-    uint8_t comp_cabec;     //Comprimento do cabeçalho - 4   
-    uint8_t tipo_serv;      //Tipo de serviço - 8
-    uint16_t comp_datagrama; //comprimento do datagrama - 16
-    uint16_t identificador;  //Identificador de 16 bit - 16
-    uint8_t flags;          //Flags - 3
-    uint16_t desloc_frag;    //Deslocamento de fragmentação - 13
-    uint8_t tempo_vida; //Tempo de vida - 8
-    uint8_t protoc_super;   //Protocolo da camada superior - 8
-    uint16_t som_verif_cabe; //Soma de verificação do cabeçalho -16
-    uint32_t end_ip_org; //Endereço IP da origem - 32
-    uint32_t end_ip_dest;//Endereço IP do destino - 32
-    uint32_t opcoes;         //Opçoes (se houver) - 32
+    uint8_t versao;             //Versão - 4
+    uint8_t comp_cabec;         //Comprimento do cabeçalho - 4   
+    uint8_t tipo_serv;          //Tipo de serviço - 8
+    uint16_t comp_datagrama;    //comprimento do datagrama - 16
+    uint16_t identificador;     //Identificador de 16 bit - 16
+    uint8_t flags;              //Flags - 3
+    uint16_t desloc_frag;       //Deslocamento de fragmentação - 13
+    uint8_t tempo_vida;         //Tempo de vida - 8
+    uint8_t protoc_super;       //Protocolo da camada superior - 8
+    uint16_t checksum;    //Soma de verificação do cabeçalho -16
+    uint32_t end_ip_org;        //Endereço IP da origem - 32
+    uint32_t end_ip_dest;       //Endereço IP do destino - 32
+    uint32_t opcoes;            //Opçoes (se houver) - 32
 };
 typedef struct Cabecalho Cabecalho;
 
@@ -52,30 +55,37 @@ struct ip
 };
 typedef struct ip ip;
 
-MensagemTexto *cria_pacote(int num_pacotes); // Função tipo Mensagem texto, retorna um endereço com num_pacotes alocados
+MensagemTexto *cria_segmento(int num_segmentos);
+ // Função tipo Mensagem texto, retorna um endereço com num_segmentos alocados
 
 ip * cria_data_ip();
 
-void preenche_ip(ip *data_ip, uint32_t ip_destino);
+void envia_pacote(ip * pacote, int protocolo);
+ 
+MensagemTexto * recebe_pacotes(int protocolo);
 
-uint16_t check(uint16_t * pacote, int size); // Função de Checksum
+void destroi_pacote(ip *pacote);
+
+void preenche_ip(ip *data_ip, uint32_t ip_destino, int protocolo_transp);
+
+uint16_t check(uint16_t * _segmento, int size); // Função de Checksum
 
 long int findSize(char file_name[]); // Retorna tamanho do arquivo
 
-void destroi_pacote(MensagemTexto *pacote); //Libera da memoria pacotes alocados
+void destroi_segmento(MensagemTexto *segmento); //Libera da memoria segmentos alocados
 
-void preenche_pacote(MensagemTexto *pacote, int tam, char *mensagem, unsigned int IdEnvio, unsigned int IdRecebe); // Preenche pacotes
+void preenche_segmento(MensagemTexto *segmento, int tam, char *mensagem, unsigned int IdEnvio, unsigned int IdRecebe); // Preenche segmentos
 
-void consulta_pacote(MensagemTexto pacote); //imprime os campos do pacote
+void consulta_segmento(MensagemTexto segmento); //imprime os campos do segmento
 
-void envia_pacote(MensagemTexto *pacote, int protocolo); //Envia pacotes, recebe ponterio para pacotes e variavel do tipo de protocolo (TCP =1) (UDp =0)
+void envia_segmento(MensagemTexto *segmento, int protocolo); //Envia segmentos, recebe ponterio para segmentos e variavel do tipo de protocolo (TCP =1) (UDp =0)
 
-MensagemTexto * recebe(int protocolo); //Retorna endereço para pacotes recebidos. Parametro: tipo de protocolo
+MensagemTexto * recebe(int protocolo); //Retorna endereço para segmentos recebidos. Parametro: tipo de protocolo
 
 arq_fragmentos * fragmenta_arq(char *nome_arquivo, int bits); // Fragementa arquivos em N bits, de acordo com parametro
 
 void close_socket(int sock); // Fecha socket (Não em uso)
 
-int reconstroi_pacote(MensagemTexto *pacote); //Reconstroi pacotes no hd e retorna tamanho do arquivo
-int valida_pacotes(MensagemTexto *pacotes); // Valida pelo campo checksum se todos os pacotes estao válidos
+int reconstroi_segmento(MensagemTexto *segmento); //Reconstroi segmentos no hd e retorna tamanho do arquivo
+int valida_segmentos(MensagemTexto *segmentos); // Valida pelo campo checksum se todos os segmentos estao válidos
 #endif

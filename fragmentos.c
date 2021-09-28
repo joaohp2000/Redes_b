@@ -45,7 +45,7 @@ arq_fragmentos * fragmenta_arq(char *nome_arquivo, int bits)
         exit(1);
     }
     // 8 bits = 1 byte
-    int tam_bloco = bits/8; // o resto seria o numero de bits do ultimo pacote
+    int tam_bloco = bits/8; // o resto seria o numero de bits do ultimo segmento
     qttd_bloco = size/tam_bloco;
      
    // blocos->fragmentos = malloc(sizeof(tam_bloco)); //fragmentos tem o tamanho
@@ -87,7 +87,7 @@ arq_fragmentos * fragmenta_arq(char *nome_arquivo, int bits)
     
 }
 int qttd_bloco;
-int reconstroi_pacote(MensagemTexto *pacote){
+int reconstroi_segmento(MensagemTexto *segmento){
      FILE *arquivo;
     int tam=0;
     // pegar o nome do arquivo e seu tamanho
@@ -100,8 +100,8 @@ int reconstroi_pacote(MensagemTexto *pacote){
         exit(1);
     }
     for(int i=0; i<qttd_bloco;i++){
-        fwrite(pacote[i].mensagem, pacote[i].tam, 1, arquivo);
-        tam+=pacote[i].tam;
+        fwrite(segmento[i].mensagem, segmento[i].tam, 1, arquivo);
+        tam+=segmento[i].tam;
     }
 
     fclose(arquivo);
