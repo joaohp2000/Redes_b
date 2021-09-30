@@ -25,7 +25,7 @@ int main()
     server.sin_addr.s_addr = INADDR_ANY;
     protocol = UDP; // define tipo de comunicação
 
-    sock = inicializar_comunicacao(SERVIDOR, &server, &cli); //inicializa servidor tipo TCP
+    sock = inicializar_comunicacao(SERVIDOR, &server, &cli); //inicializa servidor tipo protocol
 
     pacotes = cria_data_ip(qttd_bloco); //cria pacotes ip
 
