@@ -86,7 +86,7 @@ arq_fragmentos * fragmenta_arq(char *nome_arquivo, int bits)
     return blocos;
     
 }
-int qttd_bloco;
+
 int reconstroi_segmento(MensagemTexto *segmento){
      FILE *arquivo;
     int tam=0;
@@ -106,4 +106,28 @@ int reconstroi_segmento(MensagemTexto *segmento){
 
     fclose(arquivo);
     return tam;
+}
+
+void reconstroi_pacote(ip *pacote){
+     FILE *arquivo;
+    int tam=0;
+    char end_of_file=5;
+    // pegar o nome do arquivo e seu tamanho
+   
+    // Caso ocorra algum erro na abertura do arquivo
+    if ((arquivo = fopen("arquivo.txt", "w")) == NULL)
+    {
+        // o programa aborta automaticamente
+        printf("Erro! Impossivel abrir o arquivo!\n");
+        exit(1);
+    }
+    for(int i=0; i<qttd_bloco;i++){
+        fwrite(pacote[i].dados.mensagem, pacote[i].dados.tam, 1, arquivo);
+        tam+=pacote[i].dados.tam;
+    }
+    fwrite(&end_of_file,1,1,arquivo);
+    end_of_file=-1;
+    fwrite(&end_of_file,1,1,arquivo);
+    fclose(arquivo);
+    //return tam;
 }
