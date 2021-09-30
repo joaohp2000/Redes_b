@@ -166,12 +166,12 @@ void destroi_segmento(MensagemTexto *segmento)
 void preenche_segmento(MensagemTexto *segmento, int tam, char *mensagem, unsigned int IdRecebe, unsigned int IdEnvio)
 {
     //preencher os campos do segmento
-    bzero(segmento, 12);
+    bzero(segmento,  sizeof(MensagemTexto));
     segmento->tam = tam;
     segmento->IdEnvio = IdEnvio;
     segmento->IdRecebe = IdRecebe;
     memcpy(&(segmento->mensagem), mensagem, tam);
-    segmento->checksum = check((uint16_t *)(segmento), 12);
+    segmento->checksum = check((uint16_t *)(segmento),  sizeof(MensagemTexto));
 }
 
 void consulta_segmento(MensagemTexto segmento)
@@ -239,7 +239,7 @@ void envia_segmento(MensagemTexto *segmento, int protocolo)
         {
             segmento[i].IdRecebe = ntohs(client.sin_port);
             bzero(&(segmento->checksum), sizeof(unsigned short int));
-            segmento[i].checksum = check((uint16_t *)&segmento[i], 12);
+            segmento[i].checksum = check((uint16_t *)&segmento[i],  sizeof(MensagemTexto));
             // consulta_segmento(segmento[i]);
             send(msg_sock, (char *)&segmento[i], len, 0);
         }
@@ -294,7 +294,7 @@ void envia_segmento(MensagemTexto *segmento, int protocolo)
             {
                 segmento[i].IdRecebe = ntohs(client.sin_port);
                 bzero(&(segmento->checksum), sizeof(unsigned short int));
-                segmento[i].checksum = check((uint16_t *)&segmento[i], 12);
+                segmento[i].checksum = check((uint16_t *)&segmento[i],  sizeof(MensagemTexto));
 
                 if (sendto(sock, (char *)&segmento[i], len, 0, (struct sockaddr *)&client, length) < 0)
                     perror("Envio da mensagem");
@@ -347,7 +347,7 @@ int valida_segmentos(MensagemTexto *segmentos)
     int valida = 0;
     for (int i = 0; i < qttd_bloco; i++)
     {
-        if ((check((uint16_t *)&segmentos[i], 12)) == 0)
+        if ((check((uint16_t *)&segmentos[i],  sizeof(MensagemTexto))) == 0)
         {
             valida++;
         }

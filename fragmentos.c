@@ -34,7 +34,6 @@ arq_fragmentos *fragmenta_arq(char *nome_arquivo, int bits)
 
     int size;
     size = findSize(nome_arquivo); //tamanho completo do arquivo em bytes
-
     // Caso ocorra algum erro na abertura do arquivo
     if ((arquivo = fopen(nome_arquivo, "r")) == NULL)
     {
@@ -56,7 +55,7 @@ arq_fragmentos *fragmenta_arq(char *nome_arquivo, int bits)
 
         for (int i = 0; i < qttd_bloco; i++)
         {
-            blocos[i].fragmentos = malloc(sizeof(tam_bloco));
+            blocos[i].fragmentos = malloc(sizeof(char) * (tam_bloco));
             //ler o arquivo com o tamanho em byte com fread
             fread(blocos[i].fragmentos, 1, (size_t)tam_bloco, arquivo);
             blocos[i].size = tam_bloco;
@@ -73,17 +72,17 @@ arq_fragmentos *fragmenta_arq(char *nome_arquivo, int bits)
         qttd_bloco++;
         for (int i = 0; i < qttd_bloco - 1; i++)
         {
-            blocos[i].fragmentos = malloc(sizeof(tam_bloco));
+            blocos[i].fragmentos = malloc(sizeof(char) * (tam_bloco));
             //ler o arquivo com o tamanho em byte com fread
             fread(blocos[i].fragmentos, (size_t)tam_bloco, 1, arquivo);
             //printf("%s\n",blocos[i].fragmentos);
             blocos[i].size = tam_bloco;
         }
-        blocos[qttd_bloco - 1].fragmentos = malloc(sizeof(tam_ultimo));
+        blocos[qttd_bloco - 1].fragmentos = malloc((tam_ultimo));
         fread(blocos[qttd_bloco - 1].fragmentos, (size_t)tam_ultimo, 1, arquivo);
         blocos[qttd_bloco - 1].size = tam_ultimo;
     }
-
+    fclose(arquivo);
     return blocos;
 }
 
@@ -110,7 +109,7 @@ int reconstroi_segmento(MensagemTexto *segmento)
     return tam;
 }
 
-void reconstroi_pacote(ip *pacote)
+void reconstroi_pacote(ip *pacote, char *nome_arquivo)
 {
     FILE *arquivo;
     int tam = 0;
@@ -118,16 +117,17 @@ void reconstroi_pacote(ip *pacote)
     // pegar o nome do arquivo e seu tamanho
 
     // Caso ocorra algum erro na abertura do arquivo
-    if ((arquivo = fopen("arquivo.txt", "w")) == NULL)
+    if ((arquivo = fopen(nome_arquivo, "w")) == NULL)
     {
         // o programa aborta automaticamente
         printf("Erro! Impossivel abrir o arquivo!\n");
         exit(1);
     }
+    //printf("%d %d",qttd_bloco, pacote[5].dados.tam);
+
     for (int i = 0; i < qttd_bloco; i++)
     {
-        fwrite(pacote[i].dados.mensagem, pacote[i].dados.tam, 1, arquivo);
-        tam += pacote[i].dados.tam;
+        fwrite(pacote[i].dados.mensagem, 1, pacote[i].dados.tam, arquivo);
     }
     fwrite(&end_of_file, 1, 1, arquivo);
     end_of_file = -1;
@@ -136,7 +136,8 @@ void reconstroi_pacote(ip *pacote)
     //return tam;
 }
 
-void ler_arquivo(char *nome_arquivo){
+void ler_arquivo(char *nome_arquivo)
+{
     FILE *arq;
     char ch;
     if ((arq = fopen(nome_arquivo, "r")) == NULL)

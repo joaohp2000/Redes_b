@@ -8,8 +8,7 @@
 #include <sys/stat.h>
 #include "transf_arq.h"
 #define BITS 32
-
-int main()
+int main(int argc, char **argv)
 {
     arq_fragmentos *blocos;              //
     char str[80];                        //
@@ -23,7 +22,7 @@ int main()
     server.sin_family = AF_INET;
     server.sin_port = htons(1235);
     server.sin_addr.s_addr = INADDR_ANY;
-    protocol = UDP; // define tipo de comunicação
+    protocol = TCP; // define tipo de comunicação
 
     sock = inicializar_comunicacao(SERVIDOR, &server, &cli); //inicializa servidor tipo TCP
 
@@ -34,7 +33,9 @@ int main()
         preenche_segmento(&pacotes[i].dados, blocos[i].size, blocos[i].fragmentos, cli.sin_port, server.sin_port);
         preenche_ip(&pacotes[i], cli.sin_addr.s_addr, TCP_IP);
     }
+
     envia_pacote(pacotes, sock, &cli); //Envia os segmentos
     destroi_pacote(pacotes);           //libera os segmentos da memoria
     _close_sock(sock, SERVIDOR);
+    free(blocos);
 }

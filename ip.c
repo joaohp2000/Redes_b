@@ -64,7 +64,6 @@ void envia_pacote(ip *pacote, int *sock, struct sockaddr_in *host)
         for (int i = 0; i < qttd_bloco; i++)
         {
             envia(&pacote[i], *sock, host);
-            consulta_segmento(pacote[i].dados);
         }
     }
     else
@@ -73,7 +72,6 @@ void envia_pacote(ip *pacote, int *sock, struct sockaddr_in *host)
         for (int i = 0; i < qttd_bloco; i++)
         {
             envia(&pacote[i], sock[1]);
-            consulta_segmento(pacote[i].dados);
         }
     }
     destroi_pacote(tamanho);
@@ -84,12 +82,14 @@ ip *recebe_pacotes(int sock, struct sockaddr_in *host)
     ip *pacotes;
     ip *tamanho = cria_data_ip(1);
 
+    int *len;
+
     if (protocol == UDP)
     {
         recebe(tamanho, sock, host);
-        qttd_bloco = *(tamanho->dados.mensagem);
+        len = (int *)(tamanho->dados.mensagem);
+        qttd_bloco = *len;
         pacotes = cria_data_ip(qttd_bloco);
-
         for (int i = 0; i < qttd_bloco; i++)
         {
             recebe(&pacotes[i], sock, host);
@@ -98,14 +98,15 @@ ip *recebe_pacotes(int sock, struct sockaddr_in *host)
     else
     {
         recebe(tamanho, sock);
-        qttd_bloco = *(tamanho->dados.mensagem);
+        len = (int *)(tamanho->dados.mensagem);
+        qttd_bloco = *len;
         pacotes = cria_data_ip(qttd_bloco);
-
         for (int i = 0; i < qttd_bloco; i++)
         {
             recebe(&pacotes[i], sock);
         }
     }
+
     destroi_pacote(tamanho);
     return pacotes;
 }
@@ -209,7 +210,7 @@ int envia(ip *pacote, int sock, ...)
     va_list ap;
     va_start(ap, sock);
     struct sockaddr_in *destino;
-    int length = sizeof(ip);
+    int length = sizeof(struct sockaddr_in);
     if (protocol == UDP)
     {
         destino = va_arg(ap, struct sockaddr_in *);
@@ -239,8 +240,8 @@ int recebe(ip *pacote, int sock, ...)
     struct sockaddr_in *destino;
     va_list ap;
     va_start(ap, sock);
-    int length = sizeof(ip);
-    pacote->dados.checksum = check((uint16_t *)&(pacote->dados), 12);
+    int length = sizeof(struct sockaddr_in);
+    pacote->dados.checksum = check((uint16_t *)&(pacote->dados),  sizeof(MensagemTexto));
     if (protocol == UDP)
     {
         destino = va_arg(ap, struct sockaddr_in *);
@@ -261,7 +262,7 @@ int recebe(ip *pacote, int sock, ...)
         }
     }
     va_end(ap);
-    if (!(check((uint16_t *)&pacote->dados, 12) + check((uint16_t *)&pacote->Cabecalho_ip, sizeof(Cabecalho))))
+    if (!(check((uint16_t *)&pacote->dados,  sizeof(MensagemTexto)) + check((uint16_t *)&pacote->Cabecalho_ip, sizeof(Cabecalho))))
         return 0;
     else
         return 1;
@@ -272,21 +273,20 @@ void _close_sock(int *sock, int server_client)
     if (!(protocol == TCP && server_client == SERVIDOR))
     {
         close(*sock);
-        
     }
-    else{
+    else
+    {
         close(sock[1]);
         close(sock[0]);
     }
-        
 }
 
 int valida_pacotes(ip *pacote, int num_blocos)
 {
-    if(num_blocos==1)
-        return (check((uint16_t *)&pacote[0].dados, 12) + check((uint16_t *)&pacote[0].Cabecalho_ip, sizeof(Cabecalho)));
-    else{
-        return valida_pacotes(&pacote[1], num_blocos-1) + (check((uint16_t *)&pacote[num_blocos-1].dados, 12) + check((uint16_t *)&pacote[num_blocos-1].Cabecalho_ip, sizeof(Cabecalho)));
+    if (num_blocos == 1)
+        return (check((uint16_t *)&pacote[0].dados, sizeof(MensagemTexto)) + check((uint16_t *)&pacote[0].Cabecalho_ip, sizeof(Cabecalho)));
+    else
+    {
+        return valida_pacotes(&pacote[1], num_blocos - 1) + (check((uint16_t *)&pacote[num_blocos - 1].dados,  sizeof(MensagemTexto)) + check((uint16_t *)&pacote[num_blocos - 1].Cabecalho_ip, sizeof(Cabecalho)));
     }
-        
 }

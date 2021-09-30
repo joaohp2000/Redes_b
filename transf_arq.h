@@ -69,7 +69,7 @@ void ler_arquivo(char *nome_arquivo);
 
 int reconstroi_segmento(MensagemTexto *segmento); //Reconstroi segmentos no hd e retorna tamanho do arquivo
 
-void reconstroi_pacote(ip *pacote);
+void reconstroi_pacote(ip *pacote, char * nome_arquivo);
 // Funções referentes a camada de transporte --------------------------
 
 MensagemTexto *cria_segmento(int num_segmentos);
