@@ -10,7 +10,7 @@ int main()
     FILE *arq;
     ip *pacotes;
     char ch;
-    
+
     int *sock;
     struct sockaddr_in server; // define atributos do servidor
     server.sin_family = AF_INET;

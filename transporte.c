@@ -85,9 +85,9 @@ MensagemTexto *recebe_segemento(int protocolo)
                 consulta_segmento(segmentos[qttd_bloco - 1]);
             }
         } while (1);
-        
+
         close(sock);
-        
+
         return segmentos;
     }
     else
@@ -172,7 +172,6 @@ void preenche_segmento(MensagemTexto *segmento, int tam, char *mensagem, unsigne
     segmento->IdRecebe = IdRecebe;
     memcpy(&(segmento->mensagem), mensagem, tam);
     segmento->checksum = check((uint16_t *)(segmento), 12);
-
 }
 
 void consulta_segmento(MensagemTexto segmento)

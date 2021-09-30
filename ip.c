@@ -49,55 +49,39 @@ void preenche_ip(ip *data_ip, uint32_t ip_destino, int protocolo_transp)
 void envia_pacote(ip *pacote, int *sock, struct sockaddr_in *host)
 {
     //conectar com o cliente e enviar o pacote usando o protocolo selecionado
-
     struct sockaddr_in server;
     int length = sizeof(struct sockaddr_in);
-    
     getsockname(sock[0], (struct sockaddr *)&server, &length);
 
     ip *tamanho;
     tamanho = cria_data_ip(1);
-    preenche_segmento(&(tamanho->dados), 4,(char *) &qttd_bloco, host->sin_port, server.sin_port);
-    
+    preenche_segmento(&(tamanho->dados), 4, (char *)&qttd_bloco, host->sin_port, server.sin_port);
     preenche_ip(tamanho, host->sin_addr.s_addr, TCP_IP);
 
-    if (protocol == TCP)
+    if (protocol == UDP)
+    {
+        envia(tamanho, *sock, host);
+        for (int i = 0; i < qttd_bloco; i++)
+        {
+            envia(&pacote[i], *sock, host);
+        }
+    }
+    else
     {
         envia(tamanho, sock[1]);
         for (int i = 0; i < qttd_bloco; i++)
         {
             envia(&pacote[i], sock[1]);
             consulta_segmento(pacote[i].dados);
-            
         }
     }
-    else
-    {
-        if (protocol == UDP)
-        {
-            envia(tamanho, *sock, host);
-            for (int i = 0; i < qttd_bloco; i++)
-            {
-                envia(&pacote[i], *sock, host);
-            }
-        }
-        else
-        {
-            printf("Protocolo não identificado");
-        }
-        destroi_pacote(tamanho);
-    }
+    destroi_pacote(tamanho);
 }
 
 ip *recebe_pacotes(int sock, struct sockaddr_in *host)
 {
-    //segmentos armazenados vetor estrutura arq_fragmentos
-
     ip *pacotes;
     ip *tamanho = cria_data_ip(1);
-
-
-    //int len_trans = sizeof(segmentos);
 
     if (protocol == UDP)
     {
@@ -114,13 +98,11 @@ ip *recebe_pacotes(int sock, struct sockaddr_in *host)
     {
         recebe(tamanho, sock);
         qttd_bloco = *(tamanho->dados.mensagem);
-       // printf("QTTD : %d", qttd_bloco);
         pacotes = cria_data_ip(qttd_bloco);
 
         for (int i = 0; i < qttd_bloco; i++)
         {
             recebe(&pacotes[i], sock);
-           
         }
     }
     destroi_pacote(tamanho);
@@ -141,11 +123,6 @@ int *inicializar_comunicacao(int server_client, struct sockaddr_in *server, ...)
     va_list ap;
     va_start(ap, server);
 
-    //Creating socker file descriptor
-    /*Cria o socket*/
-    /*socket(familia do socket, --- ,num do protocolo)*/
-
-    /*se der erro no bind, se a porta ja ta em uso etc*/
     if (server_client == SERVIDOR)
     {
         int recv;
@@ -153,7 +130,7 @@ int *inicializar_comunicacao(int server_client, struct sockaddr_in *server, ...)
         if (protocol == UDP)
         {
             sock = malloc(4);
-          //  printf("inicializando servidor udp");
+            //  printf("inicializando servidor udp");
             *sock = socket(AF_INET, SOCK_DGRAM, 0);
             if (*sock < 0)
             { /*se nao conseguir abrir() o socket*/
@@ -174,7 +151,7 @@ int *inicializar_comunicacao(int server_client, struct sockaddr_in *server, ...)
         else
         {
             sock = malloc(8);
-          //  printf("inicializando servidor udp");
+            //  printf("inicializando servidor udp");
             sock[0] = socket(AF_INET, SOCK_STREAM, 0);
             if (sock[0] < 0)
             { /*se nao conseguir abrir() o socket*/
@@ -299,10 +276,10 @@ void _close_sock(int *sock, int server_client)
     else
         close(*sock);
 }
-int valida_pacotes(ip * pacotes)
+int valida_pacotes(ip *pacotes)
 {
 
-   /* unsigned short csum;
+    /* unsigned short csum;
     /*int valida = 0;
     for (int i = 0; i < qttd_bloco; i++)
     {
