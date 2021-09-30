@@ -64,6 +64,7 @@ void envia_pacote(ip *pacote, int *sock, struct sockaddr_in *host)
         for (int i = 0; i < qttd_bloco; i++)
         {
             envia(&pacote[i], *sock, host);
+            consulta_segmento(pacote[i].dados);
         }
     }
     else
@@ -209,9 +210,10 @@ int envia(ip *pacote, int sock, ...)
     va_start(ap, sock);
     struct sockaddr_in *destino;
     int length = sizeof(ip);
-    if (protocol == TCP)
+    if (protocol == UDP)
     {
-        if (send(sock, (char *)pacote, sizeof(ip), 0) < 0)
+        destino = va_arg(ap, struct sockaddr_in *);
+        if (sendto(sock, (char *)pacote, sizeof(ip), 0, (struct sockaddr *)destino, length) < 0)
         {
             perror("Envio da mensagem");
             va_end(ap);
@@ -220,8 +222,7 @@ int envia(ip *pacote, int sock, ...)
     }
     else
     {
-        destino = va_arg(ap, struct sockaddr_in *);
-        if (sendto(sock, (char *)pacote, sizeof(ip), 0, (struct sockaddr *)destino, length) < 0)
+        if (send(sock, (char *)pacote, sizeof(ip), 0) < 0)
         {
             perror("Envio da mensagem");
             va_end(ap);
@@ -240,21 +241,21 @@ int recebe(ip *pacote, int sock, ...)
     va_start(ap, sock);
     int length = sizeof(ip);
     pacote->dados.checksum = check((uint16_t *)&(pacote->dados), 12);
-    if (protocol == TCP)
+    if (protocol == UDP)
     {
-        if (recv(sock, (char *)pacote, sizeof(ip), 0) <= 0)
+        destino = va_arg(ap, struct sockaddr_in *);
+        if (recvfrom(sock, (char *)pacote, sizeof(ip), 0, (struct sockaddr *)destino, &length) < 0)
         {
-            perror("Fim da Conexão");
+            perror("Envio da mensagem");
             va_end(ap);
             return 2;
         }
     }
     else
     {
-        destino = va_arg(ap, struct sockaddr_in *);
-        if (recvfrom(sock, (char *)pacote, sizeof(ip), 0, (struct sockaddr *)destino, &length) < 0)
+        if (recv(sock, (char *)pacote, sizeof(ip), 0) <= 0)
         {
-            perror("Envio da mensagem");
+            perror("Fim da Conexão");
             va_end(ap);
             return 2;
         }
@@ -268,33 +269,24 @@ int recebe(ip *pacote, int sock, ...)
 
 void _close_sock(int *sock, int server_client)
 {
-    if (protocol == TCP && server_client == SERVIDOR)
+    if (!(protocol == TCP && server_client == SERVIDOR))
     {
+        close(*sock);
+        
+    }
+    else{
         close(sock[1]);
         close(sock[0]);
     }
-    else
-        close(*sock);
+        
 }
-int valida_pacotes(ip *pacotes)
-{
 
-    /* unsigned short csum;
-    /*int valida = 0;
-    for (int i = 0; i < qttd_bloco; i++)
-    {
-        if ((check((uint16_t *)&pacotes[i].dados.checksum, 12)) == 0)
-        {
-            valida++;
-        }
-        else
-        {
-            printf("segmento Incorreto");
-            return 0;
-        }
+int valida_pacotes(ip *pacote, int num_blocos)
+{
+    if(num_blocos==1)
+        return (check((uint16_t *)&pacote[0].dados, 12) + check((uint16_t *)&pacote[0].Cabecalho_ip, sizeof(Cabecalho)));
+    else{
+        return valida_pacotes(&pacote[1], num_blocos-1) + (check((uint16_t *)&pacote[num_blocos-1].dados, 12) + check((uint16_t *)&pacote[num_blocos-1].Cabecalho_ip, sizeof(Cabecalho)));
     }
-    //  printf("okkk: %d", valida);
-    if (qttd_bloco == valida)
-        printf("\nTodos os segmentos estão válidos\n\n");
-    return valida;*/
+        
 }

@@ -17,15 +17,11 @@
 struct arq_fragmentos
 {
     int size;
-    char *fragmentos;   //32 -4 ; 16 -2 
-    
+    char *fragmentos; //32 -4 ; 16 -2
 };
 typedef struct arq_fragmentos arq_fragmentos;
 
 extern int qttd_bloco;
-
-
-
 extern uint8_t protocol;
 // campo de dado recebe a struct do cabeçalho
 struct MensagemTexto
@@ -40,22 +36,21 @@ typedef struct MensagemTexto MensagemTexto;
 
 struct Cabecalho
 {
-    uint8_t versao;             //Versão - 4
-    uint8_t comp_cabec;         //Comprimento do cabeçalho - 4   
-    uint8_t tipo_serv;          //Tipo de serviço - 8
-    uint16_t comp_datagrama;    //comprimento do datagrama - 16
-    uint16_t identificador;     //Identificador de 16 bit - 16
-    uint8_t flags;              //Flags - 3 
-    uint16_t desloc_frag;       //Deslocamento de fragmentação - 13
-    uint8_t tempo_vida;         //Tempo de vida - 8
-    uint8_t protoc_super;       //Protocolo da camada superior - 8
-    uint16_t checksum;          //Soma de verificação do cabeçalho -16
-    uint32_t end_ip_org;        //Endereço IP da origem - 32
-    uint32_t end_ip_dest;       //Endereço IP do destino - 32
-    uint32_t opcoes;            //Opçoes (se houver) - 32
+    uint8_t versao;          //Versão - 4
+    uint8_t comp_cabec;      //Comprimento do cabeçalho - 4
+    uint8_t tipo_serv;       //Tipo de serviço - 8
+    uint16_t comp_datagrama; //comprimento do datagrama - 16
+    uint16_t identificador;  //Identificador de 16 bit - 16
+    uint8_t flags;           //Flags - 3
+    uint16_t desloc_frag;    //Deslocamento de fragmentação - 13
+    uint8_t tempo_vida;      //Tempo de vida - 8
+    uint8_t protoc_super;    //Protocolo da camada superior - 8
+    uint16_t checksum;       //Soma de verificação do cabeçalho -16
+    uint32_t end_ip_org;     //Endereço IP da origem - 32
+    uint32_t end_ip_dest;    //Endereço IP do destino - 32
+    uint32_t opcoes;         //Opçoes (se houver) - 32
 };
 typedef struct Cabecalho Cabecalho;
-
 
 struct ip
 {
@@ -64,22 +59,20 @@ struct ip
 };
 typedef struct ip ip;
 
-MensagemTexto *cria_segmento(int num_segmentos);
- // Função tipo Mensagem texto, retorna um endereço com num_segmentos alocados
-
-ip * cria_data_ip();
-
-void envia_pacote(ip * pacote, int * sock, struct sockaddr_in *host);
- 
-ip * recebe_pacotes(int sock, struct sockaddr_in *host);
-
-void destroi_pacote(ip *pacote);
-
-void preenche_ip(ip *data_ip, uint32_t ip_destino, int protocolo_transp);
-
-uint16_t check(uint16_t * _segmento, int size); // Função de Checksum
+// Funções referentes a fragmentação e arquivo --------------------------
 
 long int findSize(char file_name[]); // Retorna tamanho do arquivo
+
+arq_fragmentos *fragmenta_arq(char *nome_arquivo, int bits); // Fragementa arquivos em N bits, de acordo com parametro
+
+void ler_arquivo(char *nome_arquivo);
+
+int reconstroi_segmento(MensagemTexto *segmento); //Reconstroi segmentos no hd e retorna tamanho do arquivo
+
+void reconstroi_pacote(ip *pacote);
+// Funções referentes a camada de transporte --------------------------
+
+MensagemTexto *cria_segmento(int num_segmentos);
 
 void destroi_segmento(MensagemTexto *segmento); //Libera da memoria segmentos alocados
 
@@ -89,22 +82,35 @@ void consulta_segmento(MensagemTexto segmento); //imprime os campos do segmento
 
 void envia_segmento(MensagemTexto *segmento, int protocolo); //Envia segmentos, recebe ponterio para segmentos e variavel do tipo de protocolo (TCP =1) (UDp =0)
 
-MensagemTexto * recebe_segemento(int protocolo); //Retorna endereço para segmentos recebidos. Parametro: tipo de protocolo
+MensagemTexto *recebe_segemento(int protocolo); //Retorna endereço para segmentos recebidos. Parametro: tipo de protocolo
 
-arq_fragmentos * fragmenta_arq(char *nome_arquivo, int bits); // Fragementa arquivos em N bits, de acordo com parametro
+int valida_segmentos(MensagemTexto *segmentos); // Valida pelo campo checksum se todos os segmentos estao válidos
+
+//Funções referentes a camada de rede -----------------------------------
+
+ip *cria_data_ip();
+
+void envia_pacote(ip *pacote, int *sock, struct sockaddr_in *host);
+
+ip *recebe_pacotes(int sock, struct sockaddr_in *host);
+
+void destroi_pacote(ip *pacote);
+
+void preenche_ip(ip *data_ip, uint32_t ip_destino, int protocolo_transp);
 
 void close_socket(int sock); // Fecha socket (Não em uso)
-
-int reconstroi_segmento(MensagemTexto *segmento); //Reconstroi segmentos no hd e retorna tamanho do arquivo
-int valida_segmentos(MensagemTexto *segmentos); // Valida pelo campo checksum se todos os segmentos estao válidos
 
 int *inicializar_comunicacao(int server_client, struct sockaddr_in *server, ...);
 
 int recebe(ip *pacote, int sock, ...);
-
 int envia(ip *pacote, int sock, ...);
 
-void reconstroi_pacote(ip *pacote);
-
 void _close_sock(int *sock, int server_client);
+
+int valida_pacotes(ip *pacote, int num_blocos);
+
+// outras funções ------------------------------------------
+
+uint16_t check(uint16_t *_segmento, int size); // Função de Checksum
+
 #endif

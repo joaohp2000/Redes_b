@@ -135,3 +135,20 @@ void reconstroi_pacote(ip *pacote)
     fclose(arquivo);
     //return tam;
 }
+
+void ler_arquivo(char *nome_arquivo){
+    FILE *arq;
+    char ch;
+    if ((arq = fopen(nome_arquivo, "r")) == NULL)
+    {
+        // o programa aborta automaticamente
+        printf("Erro! Impossivel abrir o arquivo!\n");
+        exit(1);
+    }
+    while (ch != EOF)
+    {
+        putchar(ch);
+        ch = getc(arq);
+    }
+    fclose(arq);
+}

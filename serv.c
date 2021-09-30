@@ -23,7 +23,7 @@ int main()
     server.sin_family = AF_INET;
     server.sin_port = htons(1235);
     server.sin_addr.s_addr = INADDR_ANY;
-    protocol = TCP; // define tipo de comunicação
+    protocol = UDP; // define tipo de comunicação
 
     sock = inicializar_comunicacao(SERVIDOR, &server, &cli); //inicializa servidor tipo TCP
 
