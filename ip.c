@@ -19,7 +19,9 @@ ip *cria_data_ip(int num)
 void preenche_ip(ip *data_ip, uint32_t ip_destino, int protocolo_transp)
 {
     struct hostent *hp, *gethostbyname();
-
+    
+    srand (time(NULL));
+    
     hp = gethostbyname("localhost");
     if (hp == 0)
     {
@@ -34,10 +36,10 @@ void preenche_ip(ip *data_ip, uint32_t ip_destino, int protocolo_transp)
     data_ip->Cabecalho_ip.versao = 4;                     //Versao do IP 4 //feito
     data_ip->Cabecalho_ip.comp_cabec = sizeof(Cabecalho); // feito
     data_ip->Cabecalho_ip.comp_datagrama = sizeof(ip);    // feito
-    data_ip->Cabecalho_ip.tipo_serv = 0;                  //verificar
-    data_ip->Cabecalho_ip.identificador = 0;              //fazer
-    data_ip->Cabecalho_ip.flags = 0;                      //fazer
-    data_ip->Cabecalho_ip.desloc_frag = 0;                //verificar
+    data_ip->Cabecalho_ip.tipo_serv = 0;                  //para strem , nao necessário
+    data_ip->Cabecalho_ip.identificador = (rand()%100);   //identificador para o protocolo ip
+    data_ip->Cabecalho_ip.flags = 0;                      //como não fragmentamos o pacote ip, flag=0
+    data_ip->Cabecalho_ip.desloc_frag = 0;                //feito o pacote ip não será fragmentado
 
     data_ip->Cabecalho_ip.tempo_vida = 0;                  //feito
     data_ip->Cabecalho_ip.protoc_super = protocolo_transp; // feito
