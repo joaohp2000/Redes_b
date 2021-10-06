@@ -68,7 +68,7 @@ Para compilar, siga estas etapas:
 ```
 ./cliente
 ```
-6. Feito, agora você já deve estar vendo o conteúdo do arquivo no Terminal 1, juntamente com várias verificações de integridade.
+6. Feito, agora você já deve estar vendo o conteúdo do arquivo no Terminal 1.
 <img src="https://gyazo.com/296580837e831cb73465d4b27a94d5b7.png" alt="terminal 1">
 
 
