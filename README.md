@@ -5,7 +5,7 @@
 ![Forks](https://img.shields.io/github/forks/joaohp2000/Redes_b?style=social)
 ![Likes](https://img.shields.io/github/stars/joaohp2000/Redes_b?style=social)
 
-<img src="https://gyazo.com/46c315e6ec0f960b911dd8b5e6696e7f.png" alt="exemplo imagem">
+<img src="https://gyazo.com/296580837e831cb73465d4b27a94d5b7" alt="exemplo imagem">
 
 > Programa feito na linguagem C para a transferência de arquivos usando o procotopo TCP e UDP. Fazendo todas as verificações dos pacotes que foram enviados e recebidos.
 
@@ -21,6 +21,7 @@ O projeto ainda está em desenvolvimento e as próximas atualizações serão vo
 - [x] Criar um outro programa que servirá para receber os pacotes transmitidos.
 - [x] Criação de um novo pacote vazio.
 - [x] Adicionar os IP's de origem (seu IP) e o de destino.
+- [x] Funções que preenche todos os campos, incluindo o payload que tem o conteúdo do pacote da camada superior (camada de transporte).
 
 
 ## 💻 Pré-requisitos
@@ -52,11 +53,11 @@ Para compilar, siga estas etapas:
 
 1. No Terminal 1 - compile o servidor juntamente com a biblioteca criada.
 ```
-gcc serv.c fragmentos.c pacotes.c -o serv
+./compila.sh servidor
 ```
 2. No Terminal 2 - compile o cliente juntamente com a biblioteca criada.
 ```
-gcc cliente.c fragmentos.c pacotes.c -o cliente
+./compila.sh cliente
 ```
 3. Execute primeiramente o servidor no Terminal 1 com o seguinte comando:
 ```
@@ -68,7 +69,7 @@ gcc cliente.c fragmentos.c pacotes.c -o cliente
 ./cliente
 ```
 6. Feito, agora você já deve estar vendo o conteúdo do arquivo no Terminal 1, juntamente com várias verificações de integridade.
-<img src="https://gyazo.com/1b041ea8c81554cf53e64c096c85cf87.png" alt="terminal 1">
+<img src="https://gyazo.com/296580837e831cb73465d4b27a94d5b7" alt="terminal 1">
 
 
 ## 📫 Contribuindo para o nosso projeto
