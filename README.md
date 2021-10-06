@@ -5,7 +5,7 @@
 ![Forks](https://img.shields.io/github/forks/joaohp2000/Redes_b?style=social)
 ![Likes](https://img.shields.io/github/stars/joaohp2000/Redes_b?style=social)
 
-<img src="https://gyazo.com/296580837e831cb73465d4b27a94d5b7" alt="exemplo imagem">
+<img src="https://gyazo.com/296580837e831cb73465d4b27a94d5b7.png" alt="exemplo imagem">
 
 > Programa feito na linguagem C para a transferência de arquivos usando o procotopo TCP e UDP. Fazendo todas as verificações dos pacotes que foram enviados e recebidos.
 
@@ -69,7 +69,7 @@ Para compilar, siga estas etapas:
 ./cliente
 ```
 6. Feito, agora você já deve estar vendo o conteúdo do arquivo no Terminal 1, juntamente com várias verificações de integridade.
-<img src="https://gyazo.com/296580837e831cb73465d4b27a94d5b7" alt="terminal 1">
+<img src="https://gyazo.com/296580837e831cb73465d4b27a94d5b7.png" alt="terminal 1">
 
 
 ## 📫 Contribuindo para o nosso projeto
