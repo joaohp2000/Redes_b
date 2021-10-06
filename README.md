@@ -61,7 +61,7 @@ Para compilar, siga estas etapas:
 ```
 3. Execute primeiramente o servidor no Terminal 1 com o seguinte comando:
 ```
-./serv
+./servidor
 ```
 4. Será requisitado um nome do arquivo a ser enviado. (Verifique se o mesmo consta na pasta atual).
 5. Execute o cliente no Terminal 2 com o seguinte comando:
